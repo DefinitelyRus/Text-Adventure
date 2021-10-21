@@ -41,7 +41,6 @@ class Player(Targettable):
     def addCombatCard(self, combatCard): self.playerCombatCards.append(combatCard)
     def removeCombatCard(self, combatCard): self.playerCombatCards.remove(combatCard)
     def getCombatCardByName(self, name):
-        print(f"List length: {len(self.playerCombatCards)}")
         for card in self.playerCombatCards:
             if card.getName() == name: return card
 
@@ -114,27 +113,27 @@ class PlayerClass:
 
             case "support":
                 #Todo: add cards
-                print("aaaaaaaaaa")
                 cardList.append(CombatCard("Test Card", [dummy], ExecutableAction("Attack"))) #Temp
                 return cardList
 
 
 class CombatCard:
-    def __init__(self, name = "Unnamed Combat Card", targets = [], action = None):
+    def __init__(self, name = "Unnamed Combat Card", targets = [], action = None, value = None):
         self.cardName = name
         self.targetList = targets
         self.cardAction = action
+        self.cardAction.setValue(value)
 
     #STRING: Card Name
     def setName(self, name): self.cardName = name
     def getName(self): return self.cardName
 
     #Targettable LIST (i.e. Objects like Enemies or Players that can be targetted)
-    def setTargets(self, targets): self.targetList = targets
-    def getTargets(self): return self.targetList
+    def setTargets(self, targets): self.cardAction.targetList = targets
+    def getTargets(self): return self.cardAction.targetList
 
     #Targettable OBJECT (i.e. Objects like Enemies or Players that can be targetted)
-    def addTarget(self, target): self.targetList.append(target)
+    def addTarget(self, target): self.cardAction.targetList.append(target)
     def removeTarget(self, target):
         """Throws ValueError if target doesn't exist in list."""
         for t in self.targetList:
@@ -145,8 +144,11 @@ class CombatCard:
     #ExecutableAction OBJECT (e.g. Attack, Defend, Heal)
     def setAction(self, action): self.cardAction = action
     def getAction(self): return self.cardAction
-    def execute(self):
-        self.cardAction.execute()
+    def queue(self):
+        self.cardAction.queue()
+
+    def setValue(self, value): self.cardAction.setValue(value)
+    def getValue(self): return self.cardAction.getValue()
 
 
 
@@ -156,9 +158,10 @@ print(f"Player: {player.getName()}")
 print(f"Target: {dummy.getName()}")
 
 #Changes the health to be 5 less than before.
-print(f"HP: {dummy.getHealth()}/{dummy.getMaxHealth()}")
+print(f"HP Before: {dummy.getHealth()}/{dummy.getMaxHealth()}")
 card = player.getCombatCardByName('Test Card')
-print(f"Card: {card.getName()}")
-
-card.execute()
-print(f"HP: {dummy.getHealth()}/{dummy.getMaxHealth()}")
+card.setValue(15)
+card.addTarget(dummy)
+card.queue()
+dummy.executeEffects()
+print(f"HP After: {dummy.getHealth()}/{dummy.getMaxHealth()}")

@@ -1,9 +1,11 @@
+from abc import abstractmethod
 class Targettable:
+    @abstractmethod
     def __init__(self, name, maxHealth):
         self.entityName = name
         self.entityMaxHealth = maxHealth
         self.entityHealth = self.entityMaxHealth
-        self.effectsQueue = []
+        self.actionsQueue = []
 
     #STRING: Entity Name
     def setName(self, name): self.entityName = name
@@ -17,29 +19,33 @@ class Targettable:
     def setHealth(self, health): self.entityHealth = health
     def getHealth(self): return self.entityHealth
 
-    def receiveAction(self, effect): self.effectsQueue.append(effect)
-    def removeActionFromQueue(self, effect): self.effectsQueue.remove(effect)
-    def getReceivedActions(self): return self.effectsQueue
+    #ExecutableAction LIST: A list of
+    def receiveAction(self, action): self.actionsQueue.append(action)
+    def removeActionFromQueue(self, action): self.actionsQueue.remove(action)
+    def getReceivedActions(self): return self.actionsQueue
+
+    @abstractmethod
     def executeEffects(self):
         from PlayerActions import ExecutableAction
-        from PlayerActions import DamageAction
-        queue = self.effectsQueue
+        queue = self.actionsQueue
         totalDamage = 0
         accumulatedDamage = 0
         defense = 0
         damageMultiplier = 1
 
-        #Accumulation of effects
-        for effect in queue:
-            if not isInstance(effect, ExecutableAction): pass
-            actionType = effect.getActionType()
+        #Accumulation of actions
+        for action in queue:
+            if not isinstance(action, ExecutableAction): pass
+            actionType = action.getType()
 
-            #Health-based effects
-            if actionType == "Attack": accumulatedDamage += effect.getValue() #Usually from opponent
-            elif actionType == "Defend": defense += effect.getValue() #Usually from teammate
-            elif actionType == "Enrage": damageMultiplier += effect.getValue() #Usually from opponent
-            elif actionType == "Absorb": damageMultiplier -= effects.getValue() #Usually from teammate
+            #Health-based actions
+            if actionType == "Attack":
+                accumulatedDamage += action.getValue() #Usually from opponent
+            elif actionType == "Defend": defense += action.getValue() #Usually from teammate
+            elif actionType == "Enrage": damageMultiplier += action.getValue() #Usually from opponent
+            elif actionType == "Absorb": damageMultiplier -= actions.getValue() #Usually from teammate
+            else: print("Fail")
 
-        #Execution of effects
-        totalDamage = (totalDamage - defense) * damageMultiplier
+        #Execution of actions
+        totalDamage = (accumulatedDamage - defense) * damageMultiplier
         self.setHealth(self.getHealth() - totalDamage)

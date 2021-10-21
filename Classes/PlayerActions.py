@@ -11,7 +11,7 @@ class ExecutableAction:
         self.targetList = targets
 
     @abstractmethod
-    def execute(self):
+    def queue(self):
         for target in self.targetList:
             target.receiveAction(self)
 
