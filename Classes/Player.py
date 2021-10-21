@@ -5,7 +5,8 @@ from PlayerActions import *
 standardStat = {
 "Money" : 0,
 "Composure" : 1,
-"Charisma" : 1
+"Charisma" : 1,
+"Empathy" : 3
 }
 
 #The default dictionary of action card objects.
@@ -114,7 +115,7 @@ class PlayerClass:
             case "support":
                 #Todo: add cards
                 print("aaaaaaaaaa")
-                cardList.append(CombatCard("Test Card", [dummy], AttackAction())) #Temp
+                cardList.append(CombatCard("Test Card", [dummy], ExecutableAction("Attack"))) #Temp
                 return cardList
 
 
@@ -144,8 +145,8 @@ class CombatCard:
     #ExecutableAction OBJECT (e.g. Attack, Defend, Heal)
     def setAction(self, action): self.cardAction = action
     def getAction(self): return self.cardAction
-    def execute(self, value = None):
-        self.cardAction.execute(self.targetList, value)
+    def execute(self):
+        self.cardAction.execute()
 
 
 
@@ -159,5 +160,5 @@ print(f"HP: {dummy.getHealth()}/{dummy.getMaxHealth()}")
 card = player.getCombatCardByName('Test Card')
 print(f"Card: {card.getName()}")
 
-card.execute(5)
+card.execute()
 print(f"HP: {dummy.getHealth()}/{dummy.getMaxHealth()}")
