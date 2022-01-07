@@ -6,6 +6,8 @@ Created on 19 Oct 2021
 
 class Location:
     """
+    A location is an object that holds a set of entities that a player can find only in a specific location.
+    * This can have an expanded purpose later on.
     """
     def __init__(self, name = "Unnamed Location", entities = []):
         self.__name = name
