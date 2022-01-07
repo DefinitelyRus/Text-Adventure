@@ -1,22 +1,22 @@
-from Superclasses import Targettable
-from PlayerActions import *
+from Targetable import Targetable
+from CombatCard import CombatCard
+from PlayerActions import ExecutableAction
 
 #The default dicitonary of stats.
 standardStat = {
-"Money" : 0,
-"Composure" : 1,
-"Charisma" : 1,
-"Empathy" : 3
+    "Money" : 0,
+    "Composure" : 1,
+    "Charisma" : 1,
+    "Empathy" : 3
 }
 
 #The default dictionary of action card objects.
 standardActions = {
-"Use Item" : "useItemAction",
-"Skip Turn" : "skipTurnAction"
+    "Use Item" : "useItemAction",
+    "Skip Turn" : "skipTurnAction"
 }
 
-dummy = Targettable("Dummy", 40)
-class Player(Targettable):
+class Player(Targetable):
     from presets.PremadeObjects import randomName
     def __init__(self, name = randomName("character"), playerClass = None, inventory = None):
         self.entityName = name
@@ -66,9 +66,8 @@ class Player(Targettable):
     def setStat(self, name, value): self.playerStat[name] = value
     def getStat(self, name): return self.playerStat[name]
 
-
 class PlayerClass:
-    def __init__(self, className, maxHealth = 5, combatCards = []):
+    def __init__(self, className = "Unnamed Player Class", maxHealth = 5, combatCards = []):
         match className:
             case "custom":
                 self.classMaxHealth = maxHealth
@@ -100,68 +99,17 @@ class PlayerClass:
                 return cardList
 
             case "tutorial":
-                #Todo: add cards
+                #TODO: add cards
                 return cardList
 
             case "damage":
-                #Todo: add cards
+                #TODO: add cards
                 return cardList
 
             case "tank":
-                #Todo: add cards
+                #TODO: add cards
                 return cardList
 
             case "support":
-                #Todo: add cards
-                cardList.append(CombatCard("Test Card", [dummy], ExecutableAction("Attack"))) #Temp
+                #TODO: add cards
                 return cardList
-
-
-class CombatCard:
-    def __init__(self, name = "Unnamed Combat Card", targets = [], action = None, value = None):
-        self.cardName = name
-        self.targetList = targets
-        self.cardAction = action
-        self.cardAction.setValue(value)
-
-    #STRING: Card Name
-    def setName(self, name): self.cardName = name
-    def getName(self): return self.cardName
-
-    #Targettable LIST (i.e. Objects like Enemies or Players that can be targetted)
-    def setTargets(self, targets): self.cardAction.targetList = targets
-    def getTargets(self): return self.cardAction.targetList
-
-    #Targettable OBJECT (i.e. Objects like Enemies or Players that can be targetted)
-    def addTarget(self, target): self.cardAction.targetList.append(target)
-    def removeTarget(self, target):
-        """Throws ValueError if target doesn't exist in list."""
-        for t in self.targetList:
-            if t == target:
-                self.targetList.remove(target)
-                break
-
-    #ExecutableAction OBJECT (e.g. Attack, Defend, Heal)
-    def setAction(self, action): self.cardAction = action
-    def getAction(self): return self.cardAction
-    def queue(self):
-        self.cardAction.queue()
-
-    def setValue(self, value): self.cardAction.setValue(value)
-    def getValue(self): return self.cardAction.getValue()
-
-
-
-#Creating a new player object
-player = Player("Rus", PlayerClass("support"))
-print(f"Player: {player.getName()}")
-print(f"Target: {dummy.getName()}")
-
-#Changes the health to be 5 less than before.
-print(f"HP Before: {dummy.getHealth()}/{dummy.getMaxHealth()}")
-card = player.getCombatCardByName('Test Card')
-card.setValue(15)
-card.addTarget(dummy)
-card.queue()
-dummy.executeEffects()
-print(f"HP After: {dummy.getHealth()}/{dummy.getMaxHealth()}")
