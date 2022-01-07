@@ -1,5 +1,10 @@
 from abc import abstractmethod
-class Targettable:
+class Targetable:
+    """
+    A parent class for any targetable object, such as a Player or an Enemy.
+
+    Targetables hold a name, max health, current health, and a list of queued actions.
+    """
     @abstractmethod
     def __init__(self, name, maxHealth):
         self.entityName = name
@@ -19,7 +24,7 @@ class Targettable:
     def setHealth(self, health): self.entityHealth = health
     def getHealth(self): return self.entityHealth
 
-    #ExecutableAction LIST: A list of
+    #ExecutableAction LIST: A list of executable actions
     def receiveAction(self, action): self.actionsQueue.append(action)
     def removeActionFromQueue(self, action): self.actionsQueue.remove(action)
     def getReceivedActions(self): return self.actionsQueue
