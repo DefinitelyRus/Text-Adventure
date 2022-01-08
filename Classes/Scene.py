@@ -37,8 +37,11 @@ Scene
 class Scene:
     """
     """
-    def __init__(self, level = 1, location = None, players = [], event = None):
+    def __init__(self, level = 1, maxTurns = 10, location = None, players = [], event = None):
         self.sceneLevel = level
+        self.sceneMaxLevel = 20
+        self.sceneTurn = 0
+        self.sceneMaxTurns = maxTurns
         self.sceneLocation = location
         self.playerList = players
         self.sceneEvent = event
@@ -57,12 +60,32 @@ class Scene:
     #INT: The current level# the scene is at.
     def setLevel(self, level): self.sceneLevel = level
     def getLevel(self): return self.sceneLevel
+    def nextLevel(self, game):
+        self.sceneLevel += 1
+        if (self.sceneLevel >= self.sceneMaxLevel):
+            #NOTE: Might wanna insert some stuff here.
+            game.nextScene()
 
     #STRING: The event in the scene. (e.g. Battle, Loot, Puzzle, Store, Talk)
     def setEvent(self, event): self.sceneEvent = event
     def getEvent(self): return self.sceneEvent
 
+    #INT: The current turn the scene is on.
+    def turnPlusOne(self): self.sceneTurn += 1
+    def setTurnCount(self, turn): self.sceneTurn = turn
+    def getTurnCount(self): return self.sceneTurn
+    def nextTurn(self, targetList):
+        for target in targetList:
+            target.executeEffects()
+            #NOTE: Might want to add more stuff here.
+
+        self.turnPlusOne()
+        if (self.sceneTurn >= self.sceneMaxTurns):
+            self.nextLevel()
+
+
 if __name__ == "__main__":
+    #Everything here is temporary and is to be deleted before release.
     from main.PremadeObjects import randomName
     from Location import Location
     scene = Scene()
@@ -95,8 +118,8 @@ if __name__ == "__main__":
     cc2 = CombatCard("Basic Attack", [], exeAct1, 15)
     enemy1.addCombatCard(cc2)
     cc1.addTarget(enemy1)
-    cc1.queue() #FIXME: 'Enemy' object has no attribute 'actionsQueue' - except it does
+    cc1.queue()
 
-    print(f"Health: {enemy1.getHealth()}/{enemy1.getMaxHealth}")
+    print(f"Health: {enemy1.getHealth()}/{enemy1.getMaxHealth()}")
     enemy1.executeEffects()
-    print(f"Health: {enemy1.getHealth()}/{enemy1.getMaxHealth}")
+    print(f"Health: {enemy1.getHealth()}/{enemy1.getMaxHealth()}")
