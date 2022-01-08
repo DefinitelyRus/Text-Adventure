@@ -2,12 +2,10 @@ from Targetable import Targetable
 
 class Enemy(Targetable):
     def __init__(self, name = "Unnamed Enemy", enemyClass = None, lootTable = None):
-        self.entityName = name
         self.enemyClass = enemyClass
         self.enemyCombatCards = self.enemyClass.getCombatCards()
-        self.entityMaxHealth = self.enemyClass.getMaxHealth()
-        self.entityHealth = self.enemyClass.getMaxHealth()
         self.enemyLootTable = lootTable
+        super().__init__(name, self.enemyClass.getMaxHealth())
 
     #STRING: Enemy Name
     def setName(self, name): self.entityName = name

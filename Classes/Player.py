@@ -19,13 +19,11 @@ standardActions = {
 class Player(Targetable):
     from presets.PremadeObjects import randomName
     def __init__(self, name = randomName("character"), playerClass = None, inventory = None):
-        self.entityName = name
         self.playerClass = playerClass
         self.playerCombatCards = self.playerClass.getCombatCards()
         self.playerInventory = inventory
-        self.entityMaxHealth = self.playerClass.getMaxHealth()
-        self.entityHealth = self.playerClass.getMaxHealth()
         self.playerStat = standardStat
+        super().__init__(name, self.playerClass.getMaxHealth())
 
     #STRING: Player Name
     def setName(self, name): self.entityName = name
