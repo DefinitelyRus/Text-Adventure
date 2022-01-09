@@ -37,9 +37,9 @@ Scene
 class Scene:
     """
     """
-    def __init__(self, level = 1, maxTurns = 10, location = None, players = [], event = None):
-        self.sceneLevel = level
-        self.sceneMaxLevel = 20
+    def __init__(self, maxLevel = 20, maxTurns = 10, location = None, players = [], event = None):
+        self.sceneMaxLevel = maxLevel
+        self.sceneLevel = self.sceneMaxLevel
         self.sceneTurn = 0
         self.sceneMaxTurns = maxTurns
         self.sceneLocation = location
@@ -60,15 +60,20 @@ class Scene:
     #INT: The current level# the scene is at.
     def setLevel(self, level): self.sceneLevel = level
     def getLevel(self): return self.sceneLevel
-    def nextLevel(self, game):
+    def nextLevel(self):
+        """
+        Proceeds to the next level of the scene.
+        If the scene has reached the max level, this function will return TRUE.
+        """
         self.sceneLevel += 1
         if (self.sceneLevel >= self.sceneMaxLevel):
             #NOTE: Might wanna insert some stuff here.
-            game.nextScene()
+            return true
 
     #STRING: The event in the scene. (e.g. Battle, Loot, Puzzle, Store, Talk)
     def setEvent(self, event): self.sceneEvent = event
     def getEvent(self): return self.sceneEvent
+    #TODO: Set Events to be assigned on a per-level basis.
 
     #INT: The current turn the scene is on.
     def turnPlusOne(self): self.sceneTurn += 1
