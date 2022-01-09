@@ -20,10 +20,12 @@ class ExecutableAction:
     def setType(self, type): self.actionType = type
     def getType(self): return self.actionType
 
+    #ANY: Value applied
     @abstractmethod
     def setValue(self, value): self.value = value
     def getValue(self): return self.value
 
+    #Targetable OBJECT: The targets the action is to be applied to.
     @abstractmethod
     def setTargets(self, targets): self.targetList = targets
     def getTargets(self): return self.targetList
