@@ -24,7 +24,9 @@ class Game:
     Every 7th and 14th level of a stage, the enemy encounter will be a guaranteed mini-boss.
     Levels 2, 5, 9, 12, 16, and 18 are all guaranteed regular combat events.
     The rest of the levels are random. Could be a combat event, shop, etc.
-    
+    All 20th levels are guaranteed boss fights. Finishing this level will progress the
+    game into the next scene.
+
     In each turn, each player can perform an ExecutableAction by using a CombatCard.
     Essentially, a CombatCard is a preset ExecutableAction that can be used in combat.
 
