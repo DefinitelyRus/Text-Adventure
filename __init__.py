@@ -3,9 +3,9 @@ Created on 10 Mar 2021
 
 @author: Rus
 '''
-from Game import Game
-from Targetable import Targetable
-from Player import Player
+from classes.Game import Game
+from classes.Targetable import Targetable
+from classes.Player import Player
 
 import random
 game = Game(3)
