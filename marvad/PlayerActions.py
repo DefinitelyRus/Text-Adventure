@@ -29,3 +29,12 @@ class ExecutableAction:
     @abstractmethod
     def setTargets(self, targets): self.targetList = targets
     def getTargets(self): return self.targetList
+
+def getPreset(presetName):
+    match presetName:
+        case "AttackAction":
+            return ExecutableAction("Attack", 10)
+        case "DefendAction":
+            return ExecutableAction("Defend", 10)
+        case "EnrageAction":
+            return ExecutableAction("Enrage", 10)
