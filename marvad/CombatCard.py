@@ -1,7 +1,7 @@
 class CombatCard:
-    def __init__(self, name = "Unnamed Combat Card", targets = [], action = None, value = None):
+    def __init__(self, name = "Unnamed Combat Card", action = None, value = None):
         self.cardName = name
-        self.targetList = targets
+        self.targetList = []
         self.cardAction = action
         self.cardAction.setValue(value)
 
