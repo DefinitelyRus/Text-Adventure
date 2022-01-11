@@ -37,14 +37,18 @@ Scene
 class Scene:
     """
     """
-    def __init__(self, maxLevel = 20, maxTurns = 10, location = None, players = [], event = None):
-        self.sceneMaxLevel = maxLevel
-        self.sceneLevel = self.sceneMaxLevel
+    def __init__(self, level, maxTurns = 10, location = None, players = [], event = None, entities = []):
+        self.sceneLevel = level
         self.sceneTurn = 0
         self.sceneMaxTurns = maxTurns
         self.sceneLocation = location
         self.playerList = players
         self.sceneEvent = event
+
+    #Scene Level INT: A required parameter. This will serve as the level counter.
+    #This can also be internally referred to as Scene ID.
+    def setSceneLevel(self, level): self.sceneLevel = level
+    def getSceneLevel(self): return self.sceneLevel
 
     #Player OBJECT List: List of playable characters.
     def setPlayerList(self, players): self.playerList = players
@@ -57,23 +61,13 @@ class Scene:
     def setLocation(self, location): self.sceneLocation = location
     def getLocation(self): return self.sceneLocation
 
-    #INT: The current level# the scene is at.
-    def setLevel(self, level): self.sceneLevel = level
-    def getLevel(self): return self.sceneLevel
-    def nextLevel(self):
-        """
-        Proceeds to the next level of the scene.
-        If the scene has reached the max level, this function will return TRUE.
-        """
-        self.sceneLevel += 1
-        if (self.sceneLevel >= self.sceneMaxLevel):
-            #NOTE: Might wanna insert some stuff here.
-            return true
-
-    #STRING: The event in the scene. (e.g. Battle, Loot, Puzzle, Store, Talk)
+    #Event STRING: The event in the scene. (e.g. Battle, Loot, Puzzle, Store, Talk)
     def setEvent(self, event): self.sceneEvent = event
     def getEvent(self): return self.sceneEvent
-    #TODO: Set Events to be assigned on a per-level basis.
+
+    #Max Turn INT: The max number of turns before proceeding to the next turn.
+    def setMaxTurns(self, maxTurns): self.sceneMaxTurns = maxTurns
+    def getMaxTurns(self): return self.sceneMaxTurns
 
     #INT: The current turn the scene is on.
     def turnPlusOne(self): self.sceneTurn += 1
@@ -86,45 +80,5 @@ class Scene:
 
         self.turnPlusOne()
         if (self.sceneTurn >= self.sceneMaxTurns):
-            self.nextLevel()
-
-
-if __name__ == "__main__":
-    #Everything here is temporary and is to be deleted before release.
-    from main.PremadeObjects import randomName
-    from Location import Location
-    scene = Scene()
-    scene.setLocation(Location(randomName("location")))
-
-    from Player import Player, PlayerClass
-    from CombatCard import CombatCard
-    from PlayerActions import ExecutableAction
-    from Enemy import Enemy, EnemyClass
-
-    playerClass1 = PlayerClass("custom", 30)
-    exeAct1 = ExecutableAction("Attack")
-    cc1 = CombatCard("Basic Attack", [], exeAct1, 15)
-    playerClass1.addCombatCard(cc1)
-    player1 = Player("Rus", playerClass1, None)
-
-    scene.addPlayer(player1)
-    scene.setLevel(1)
-    scene.setEvent("Nice event")
-
-    print(f"Location: {scene.getLocation().getName()}")
-    print(f"Player list: {scene.getPlayerList()[0].getName()}")
-    print(f"Level: {scene.getLevel()}")
-    print(f"Event: {scene.getEvent()}\n")
-
-    enemyClass1 = EnemyClass("custom", 40)
-    enemy1 = Enemy("Cunt", enemyClass1, None)
-    print(f"\nEnemy: {enemy1.getName()}")
-
-    cc2 = CombatCard("Basic Attack", [], exeAct1, 15)
-    enemy1.addCombatCard(cc2)
-    cc1.addTarget(enemy1)
-    cc1.queue()
-
-    print(f"Health: {enemy1.getHealth()}/{enemy1.getMaxHealth()}")
-    enemy1.executeEffects()
-    print(f"Health: {enemy1.getHealth()}/{enemy1.getMaxHealth()}")
+            return false
+        else: return true
