@@ -1,5 +1,5 @@
-from Targetable import Targetable
-from EntityClass import EntityClass
+from marvad.Targetable import Targetable
+from marvad.EntityClass import EntityClass
 
 class Enemy(Targetable):
     def __init__(self, name = "Unnamed Enemy", enemyClass = None, lootTable = None):

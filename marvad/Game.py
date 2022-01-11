@@ -41,11 +41,11 @@ class Game:
     levelList = []
 
     def __init__(self, gameLength):
-        from classes.Player import Player
-        from classes.EntityClass import EntityClass
-        from classes.Scene import Scene
-        from classes.Location import Location
-        from classes.Utils import randomName
+        from marvad.Player import Player
+        from marvad.EntityClass import EntityClass
+        from marvad.Scene import Scene
+        from marvad.Location import Location
+        from marvad.Utils import randomName
 
         self.id = None
         self.length = gameLength

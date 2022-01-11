@@ -3,9 +3,9 @@ Created on 10 Mar 2021
 
 @author: Rus
 '''
-from classes.Game import Game
-from classes.Targetable import Targetable
-from classes.Player import Player
+from marvad.Game import Game
+from marvad.Targetable import Targetable
+from marvad.Player import Player
 
 import random
 game = Game(3)

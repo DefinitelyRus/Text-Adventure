@@ -1,7 +1,8 @@
-from classes.Targetable import Targetable
-from classes.CombatCard import CombatCard
-from classes.PlayerActions import ExecutableAction
-from classes.EntityClass import EntityClass
+from marvad.Targetable import Targetable
+from marvad.CombatCard import CombatCard
+from marvad.PlayerActions import ExecutableAction
+from marvad.EntityClass import EntityClass
+from marvad.presets.PremadeObjects import randomName
 
 #The default dicitonary of stats.
 standardStat = {
@@ -18,7 +19,6 @@ standardActions = {
 }
 
 class Player(Targetable):
-    from classes.presets.PremadeObjects import randomName
     def __init__(self, name = randomName("character"), playerClass = None, inventory = None):
         self.playerClass = playerClass
         self.playerCombatCards = self.playerClass.getCombatCards()
