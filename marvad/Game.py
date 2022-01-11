@@ -1,61 +1,30 @@
-'''
-Created on 19 Oct 2021
-
-@author: Rus1
-'''
+from marvad.Player import Player
+from marvad.EntityClass import EntityClass
+from marvad.Scene import Scene
+from marvad.Location import Location
+from marvad.Utils import randomName
 
 class Game:
-    #TODO: Get Game into a usable state.
     """
-    This contains all the data about any ongoing game.
-    To start a game, a Game object has to be created, only needing to specify
-    how many levels are to be played. The rest is handled automatically upon
-    the creation of the Game object (inside __init__).
+    This contains all the data about any ongoing game of Marvelous Adventures.
+    To start a game, a Game object has to be created.
+    This will serve as the top-level manager of all major attributes.
 
-    In a standard game of Marvelous Adventures, there are 5 scenes (known externally as "stages").
-    In each stage, there are 20 levels held in a specified Location.
-
-    In each level, there are a list of enemies and a specified number of turns.
-    Once the players run out of turns, the enemies will run away with limited or no
-    rewards to the players.
-    All 1st levels of each stage are scripted. All events in this level are premade.
-    Every 6th and 19th level of a stage, there won't be any required combat events.
-    Instead, the players will enter a shop where they can buy and/or sell items.
-    Every 7th and 14th level of a stage, the enemy encounter will be a guaranteed mini-boss.
-    Levels 2, 5, 9, 12, 16, and 18 are all guaranteed regular combat events.
-    The rest of the levels are random. Could be a combat event, shop, etc.
-    All 20th levels are guaranteed boss fights. Finishing this level will progress the
-    game into the next scene.
-
-    In each turn, each player can perform an ExecutableAction by using a CombatCard.
-    Essentially, a CombatCard is a preset ExecutableAction that can be used in combat.
-
-    Locations can provide special effects during gameplay. For example,
-    an Arctic Tundra location will apply a freezing effect on all entities, including enemies.
-    Certain entities are immune to its effects, some aren't. Those who are affected
-    will need to prevent it by using certain CombatCards or items.
+    Created on 19 Oct 2021
+    @author: DefinitelyRus
     """
 
-    id = None
-    length = None
-    levelList = []
+    #id = None
+    #length = None
+    #levelList = []
+    #TODO: Remove...?
 
-    def __init__(self, gameLength):
-        from marvad.Player import Player
-        from marvad.EntityClass import EntityClass
-        from marvad.Scene import Scene
-        from marvad.Location import Location
-        from marvad.Utils import randomName
-
-        self.id = None
-        self.length = gameLength
-        self.locationList = []
-        self.playerList = [Player("Rus", EntityClass("custom"), None)]
+    def __init__(self):
+        self.playerList = []
         self.sceneList = []
+        self.id = None
+        self.locationList = []
         self.currentSceneIndex = 0
-
-        for i in range(self.length):
-            self.locationList.append(Scene(2, 2, Location(randomName("location")), self.playerList, "Battle"))
 
     #Player OBJECT LIST: This contains all the player objects in the game.
     def setPlayerList(self, playerList): self.playerList = playerList
@@ -80,6 +49,90 @@ class Game:
     def getSceneByIndex(self, sceneIndex): return self.sceneList[sceneIndex]
     def removeSceneByIndex(self, sceneIndex): self.sceneList.pop(sceneIndex)
     def getCurrentScene(self): return self.sceneList[self.currentSceneIndex]
+    def getSceneById(self, sceneId):
+        for scene in self.sceneList:
+            if scene.getSceneLevel() == sceneId: return scene
 
-if __name__ == "__main__":
-    Game(3)
+    def endGame(self): print("Game Over") #TODO: Do something
+
+def createGame(playerName = "Player"):
+    from marvad.CombatCard import CombatCard
+    from marvad.PlayerActions import ExecutableAction, getPreset #TEMP: Remove later
+    from marvad import Utils
+    import random
+    from marvad.Enemy import Enemy
+    """
+    This creates a standard single-player game of Marvelous Adventures.
+    Contains 100 levels divided into 5 locations.
+    """
+    LEVEL_COUNT = 100 #Effectively a constant
+    game = Game()
+
+    #TEMP: Replace with constructors once child class ExecutableAction is created.
+    attackAction = getPreset("AttackAction")
+    combatCards = [CombatCard("Attack Card", attackAction, 20)] #TODO: Add more cards
+    playerClass = EntityClass("custom", 50, combatCards)
+    player = Player(playerName, playerClass, None)
+
+    locationList = [Location(Utils.randomName("location")), Location(Utils.randomName("location")), Location(Utils.randomName("location")), Location(Utils.randomName("location")), Location(Utils.randomName("location"))]
+    locationListIndex = 0
+
+    for levelCount in range(LEVEL_COUNT):
+        print(f"|Creating Scene #{levelCount}...")
+        event = "Battle" #COMBAK: Change to "Random". Also create random event generator.
+        innerLevelCount = (levelCount + 1) % 20
+
+        match innerLevelCount:
+            case 1: event = "Scripted"
+            case 2: event = "Battle"
+            case 5: event = "Battle"
+            case 6: event = "Store"
+            case 7: event = "Battle"
+            case 9: event = "Battle"
+            case 12: event = "Battle"
+            case 16: event = "Battle"
+            case 18: event = "Battle"
+            case 19: event = "Store"
+            case 20: event = "Battle"
+
+        ENEMY_CLASS_LIST = ["damage", "tank", "support"]
+        enemyList = []
+        totalTurns = 0
+        #Spawns a random number of enemies (between 1-3 enemies).
+        for enemyCount in range(random.randint(1,3)):
+            print(f"|Creating Enemy #{enemyCount}...")
+            enemy = Enemy()
+            enemyClass = EntityClass(random.choice(ENEMY_CLASS_LIST))
+            #NOTE: Values are set random for now.
+            #Values should be scaled based on the number of enemies
+            #and the total no. of turns in this scene.
+
+            enemy.setName(Utils.randomName("character"))
+            enemy.setClass(enemyClass)
+            enemy.setTurnLimit(random.randint(5,15))
+            #enemy.setLootTable(lootTable)
+            print(f"|Created Enemy with attributes...")
+            print(f"|  Name: {enemy.getName()}\n|  Class: {enemy.getClass().getName()}\n|  Turn Limit: {enemy.getTurnLimit()}")
+            print(f"|Adding Enemy to list...")
+            enemyList.append(enemy)
+
+            totalTurns += enemy.getTurnLimit()
+
+        scene = Scene(levelCount)
+        scene.setMaxTurns(totalTurns)
+        scene.setLocation(locationList[locationListIndex])
+        scene.addPlayer(player)
+        scene.setEvent(event)
+
+        print(f"|Created Scene with attributes...")
+        print(f"|  Max Turns: {scene.getMaxTurns()}")
+        print(f"|  Location: {scene.getLocation().getName()} (Index: {locationListIndex})")
+        print(f"|  Event: {scene.getEvent()}")
+        print(f"|Adding Scene #{scene.getSceneLevel()}...")
+        game.addScene(scene)
+
+        if (levelCount + 1) % 20 == 0: locationListIndex += 1
+        elif (levelCount <= 100): game.endGame()
+
+        print("")
+    return game
