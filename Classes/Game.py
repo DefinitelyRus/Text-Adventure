@@ -41,10 +41,11 @@ class Game:
     levelList = []
 
     def __init__(self, gameLength):
-        from Player import Player
-        from EntityClass import EntityClass
-        from Scene import Scene
-        from Location import Location
+        from classes.Player import Player
+        from classes.EntityClass import EntityClass
+        from classes.Scene import Scene
+        from classes.Location import Location
+        from classes.Utils import randomName
 
         self.id = None
         self.length = gameLength
@@ -79,14 +80,6 @@ class Game:
     def getSceneByIndex(self, sceneIndex): return self.sceneList[sceneIndex]
     def removeSceneByIndex(self, sceneIndex): self.sceneList.pop(sceneIndex)
     def getCurrentScene(self): return self.sceneList[self.currentSceneIndex]
-
-#TODO: Move to a new file Utils.py
-def randomName(nameForWhat):
-    import random
-
-    locationNames = ["Test1", "Test2", "Test3"]
-
-    if nameForWhat == "location": return random.choice(locationNames)
 
 if __name__ == "__main__":
     Game(3)
