@@ -2,7 +2,7 @@ from marvad.Targetable import Targetable
 from marvad.CombatCard import CombatCard
 from marvad.PlayerActions import ExecutableAction
 from marvad.EntityClass import EntityClass
-from marvad.presets.PremadeObjects import randomName
+from marvad.Utils import randomName
 
 #The default dicitonary of stats.
 standardStat = {
@@ -42,6 +42,7 @@ class Player(Targetable):
     def getCombatCardByName(self, name):
         for card in self.playerCombatCards:
             if card.getName() == name: return card
+    def getCombatCardByIndex(self, index): return self.playerCombatCards[index]
 
     #PlayerInventory OBJECT (i.e. A container for items)
     def setInventory(self, inventory): self.playerInventory = inventory
