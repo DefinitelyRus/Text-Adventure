@@ -2,7 +2,8 @@ from marvad.Targetable import Targetable
 from marvad.EntityClass import EntityClass
 
 class Enemy(Targetable):
-    def __init__(self, name = "Unnamed Enemy", enemyClass = None, lootTable = None):
+    def __init__(self, turnLimit = 10, name = "Unnamed Enemy", enemyClass = EntityClass(), lootTable = None):
+        self.enemyTurnLimit = turnLimit
         self.enemyClass = enemyClass
         self.enemyCombatCards = self.enemyClass.getCombatCards()
         self.enemyLootTable = lootTable
@@ -32,6 +33,10 @@ class Enemy(Targetable):
     #INT: Current Enemy Health
     def setHealth(self, health): self.entityHealth = health
     def getHealth(self): return self.entityHealth
+
+    #Turn Limit INT: Number of turns enemies will take before escaping.
+    def setTurnLimit(self, turnLimit): self.turnLimit = turnLimit
+    def getTurnLimit(self): return self.turnLimit
 
     #Loot Table DICTIONARY (i.e. Likelihood of dropping certain items)
     #COMBAK: Decide whether this is better left as a ITEM:CHANCE% dictionary or a hashtable.
