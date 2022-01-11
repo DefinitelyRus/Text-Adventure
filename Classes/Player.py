@@ -1,7 +1,7 @@
-from Targetable import Targetable
-from CombatCard import CombatCard
-from PlayerActions import ExecutableAction
-from EntityClass import EntityClass
+from classes.Targetable import Targetable
+from classes.CombatCard import CombatCard
+from classes.PlayerActions import ExecutableAction
+from classes.EntityClass import EntityClass
 
 #The default dicitonary of stats.
 standardStat = {
@@ -18,7 +18,7 @@ standardActions = {
 }
 
 class Player(Targetable):
-    from presets.PremadeObjects import randomName
+    from classes.presets.PremadeObjects import randomName
     def __init__(self, name = randomName("character"), playerClass = None, inventory = None):
         self.playerClass = playerClass
         self.playerCombatCards = self.playerClass.getCombatCards()
