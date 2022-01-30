@@ -2,6 +2,8 @@ class EntityClass:
     """
     This object is used to store what cards and attributes an entity can have.
     All combat entities are required to have a class.
+
+    Note: The word "class" refers to a type of entity object, not a Python class.
     """
     def __init__(self, className = "empty", maxHealth = 5, combatCards = []):
         match className:

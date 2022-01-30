@@ -19,6 +19,9 @@ standardActions = {
 }
 
 class Player(Targetable):
+    """
+    These are playable Targetable objects with additional attributes and actions.
+    """
     def __init__(self, name = randomName("character"), playerClass = None, inventory = None):
         self.playerClass = playerClass
         self.playerCombatCards = self.playerClass.getCombatCards()

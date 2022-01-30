@@ -2,6 +2,11 @@ from marvad.Targetable import Targetable
 from marvad.EntityClass import EntityClass
 
 class Enemy(Targetable):
+    """
+    An enemy object - this is a targetable object.
+    Players can choose to use CombatCard objects against these entities.
+    Other Enemy objects can interact with this to use their own CombatCard objects. (For game design; not included here.)
+    """
     def __init__(self, turnLimit = 10, name = "Unnamed Enemy", enemyClass = EntityClass(), lootTable = None):
         self.enemyTurnLimit = turnLimit
         self.enemyClass = enemyClass

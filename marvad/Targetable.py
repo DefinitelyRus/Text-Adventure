@@ -1,8 +1,7 @@
 from abc import abstractmethod
 class Targetable:
     """
-    A parent class for any targetable object, such as a Player or an Enemy.
-
+    A parent class for any targetable object, such as a Player or an Enemy object.
     Targetables hold a name, max health, current health, and a list of queued actions.
     """
     @abstractmethod
