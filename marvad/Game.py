@@ -78,7 +78,7 @@ def createGame(playerName = "Player"):
     locationListIndex = 0
 
     for levelCount in range(LEVEL_COUNT):
-        print(f"|Creating Scene #{levelCount}...")
+        print(f"|Creating Scene #{levelCount}...\n")
         event = "Battle" #COMBAK: Change to "Random". Also create random event generator.
         innerLevelCount = (levelCount + 1) % 20
 
@@ -112,11 +112,14 @@ def createGame(playerName = "Player"):
             enemy.setTurnLimit(random.randint(5,15))
             #enemy.setLootTable(lootTable)
             print(f"|Created Enemy with attributes...")
-            print(f"|  Name: {enemy.getName()}\n|  Class: {enemy.getClass().getName()}\n|  Turn Limit: {enemy.getTurnLimit()}")
+            print(f"    Name: {enemy.getName()}")
+            print(f"    Class: {enemy.getClass().getName()}")
+            print(f"    Turns: {enemy.getTurnLimit()}")
             print(f"|Adding Enemy to list...")
             enemyList.append(enemy)
 
             totalTurns += enemy.getTurnLimit()
+            print("")
 
         scene = Scene(levelCount)
         scene.setMaxTurns(totalTurns)
@@ -125,14 +128,14 @@ def createGame(playerName = "Player"):
         scene.setEvent(event)
 
         print(f"|Created Scene with attributes...")
-        print(f"|  Max Turns: {scene.getMaxTurns()}")
-        print(f"|  Location: {scene.getLocation().getName()} (Index: {locationListIndex})")
-        print(f"|  Event: {scene.getEvent()}")
+        print(f"    Turns: {scene.getMaxTurns()}")
+        print(f"    Location: {scene.getLocation().getName()} ({locationListIndex})")
+        print(f"    Event: {scene.getEvent()}")
         print(f"|Adding Scene #{scene.getSceneLevel()}...")
         game.addScene(scene)
 
         if (levelCount + 1) % 20 == 0: locationListIndex += 1
-        elif (levelCount <= 100): game.endGame()
+        elif (levelCount >= 100): game.endGame()
 
-        print("")
+        print("\n----------------------------------------\n")
     return game
