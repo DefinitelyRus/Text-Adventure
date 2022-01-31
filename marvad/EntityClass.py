@@ -43,7 +43,7 @@ class EntityClass:
     def getCardsPreset(self, presetName):
         cardList = []
         match presetName:
-            #TODO: add cards
+            #TODO: Add cards. (Needs further game design before this can be implemented.)
             case "empty":
                 return cardList
 
