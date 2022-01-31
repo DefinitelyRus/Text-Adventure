@@ -56,22 +56,25 @@ class Game:
     def endGame(self): print("Game Over") #TODO: Do something
 
 def createGame(playerName = "Player"):
-    from marvad.CombatCard import CombatCard
-    from marvad.PlayerActions import ExecutableAction, getPreset #TEMP: Remove later
-    from marvad import Utils
-    import random
-    from marvad.Enemy import Enemy
     """
     This creates a standard single-player game of Marvelous Adventures.
     Contains 100 levels divided into 5 locations.
+
+    Created on 21 Jan 2022
+    @author: DefinitelyRus
     """
+    from marvad.CombatCard import CombatCard
+    from marvad.PlayerActions import ExecutableAction
+    from marvad import Utils
+    import random
+    from marvad.Enemy import Enemy
     LEVEL_COUNT = 100 #Effectively a constant
     game = Game()
 
-    #TEMP: Replace with constructors once child class ExecutableAction is created.
-    attackAction = getPreset("AttackAction")
-    combatCards = [CombatCard("Attack Card", attackAction, 20)] #TODO: Add more cards
-    playerClass = EntityClass("custom", 50, combatCards)
+    #TODO: combatCards List should be based on the player's chosen class.
+    #NOTE: The player's class should be set by random only in this game autogenerator and nowhere else.
+    combatCards = [CombatCard("Attack Card", ExecutableAction("Attack"), random.randint(10,25)), CombatCard("Defend Card", ExecutableAction("Defend"), random.randint(10,25)), CombatCard("Enrage Card", ExecutableAction("Enrage"), random.randint(5,15))]
+    playerClass = EntityClass("custom", random.randint(30,100), combatCards)
     player = Player(playerName, playerClass, None)
 
     locationList = [Location(Utils.randomName("location")), Location(Utils.randomName("location")), Location(Utils.randomName("location")), Location(Utils.randomName("location")), Location(Utils.randomName("location"))]
@@ -103,14 +106,12 @@ def createGame(playerName = "Player"):
             print(f"|Creating Enemy #{enemyCount}...")
             enemy = Enemy()
             enemyClass = EntityClass(random.choice(ENEMY_CLASS_LIST))
-            #NOTE: Values are set random for now.
-            #Values should be scaled based on the number of enemies
-            #and the total no. of turns in this scene.
+            #NOTE: Values are set random for now. Values should be scaled based on the number of enemies and the total no. of turns in this scene.
 
             enemy.setName(Utils.randomName("character"))
             enemy.setClass(enemyClass)
             enemy.setTurnLimit(random.randint(5,15))
-            #enemy.setLootTable(lootTable)
+            #enemy.setLootTable(lootTable) #TODO: Add loot tables.
             print(f"|Created Enemy with attributes...")
             print(f"    Name: {enemy.getName()}")
             print(f"    Class: {enemy.getClass().getName()}")
