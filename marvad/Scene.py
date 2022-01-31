@@ -1,7 +1,6 @@
 '''
 Created on 19 Oct 2021
-
-@author: Rus1
+@author: DefinitelyRus
 '''
 
 """
@@ -37,8 +36,9 @@ Scene
 class Scene:
     """
     """
-    def __init__(self, level, maxTurns = 10, location = None, players = [], event = None, entities = []):
+    def __init__(self, level, type, maxTurns = 10, location = None, players = [], event = None, entities = []):
         self.sceneLevel = level
+        self.sceneType = type
         self.sceneTurn = 0
         self.sceneMaxTurns = maxTurns
         self.sceneLocation = location
@@ -49,6 +49,11 @@ class Scene:
     #This can also be internally referred to as Scene ID.
     def setSceneLevel(self, level): self.sceneLevel = level
     def getSceneLevel(self): return self.sceneLevel
+
+    #Scene Type STRING: A required parameter. This indicated what kind of scene this object is, whether it's "combat", "scripted", "shop", "dialogue", or "minigame".
+    #Each one will determine what set of ExecutableAction cards will be available to the player. For example, a combat scene would only allow usage of CombatCards by default, while a shop scene would only allow ShopCards.
+    def setSceneType(self, type): self.sceneType = type
+    def getSceneType(self): return self.sceneType
 
     #Player OBJECT List: List of playable characters.
     def setPlayerList(self, players): self.playerList = players
