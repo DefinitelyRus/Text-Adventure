@@ -1,11 +1,3 @@
-#A list of names of places.
-#TODO: Move contents to LocationNames.json and create a JSON parser here.
-locationNames = ["Zuma", "Delphi", "Neustra", "Colton", "Varona", "Caledonia", "Konoi", "Shenandoah", "Nachdicht", "Earsia", "Kamachya", "Zariya", "Cazelle", "Yooto"]
-
-#A list of names of characters.
-#TODO: Move contents to CharacterNames.json and create a JSON parser here.
-characterNames = ["Harold", "Gordon", "Kris", "Tin", "Cetteel", "Oxy"]
-
 #Randomly chooses a name from a given list.
 def randomName(nameFor):
     """
@@ -23,6 +15,12 @@ def randomName(nameFor):
             return random.choice(characterNames)
 
 def getJson(filePath):
+    """
+    This function requires importing the "json" library.
+
+    Retrieves the contents of the specified JSON files and
+    returns a parsed object.
+    """
     import json
     file = open(filePath, 'r')
     jsonAsString = json.loads(file.read())
@@ -30,6 +28,11 @@ def getJson(filePath):
     return jsonAsString
 
 def setJson(filePath, content):
+    """
+    This function requires importing the "json" library.
+
+    Overwrites the contents of the specified JSON file with the given content.
+    """
     import json
     with open(filePath, "w") as file:
         file.write(json.dumps(content, indent=4))
@@ -37,6 +40,8 @@ def setJson(filePath, content):
 
 def addToJson(filePath, object, toAppend = True, toSort = False):
     """
+    This function requires importing the "json" library.
+
     Automagically adds the specified object(s) to the JSON file.
     This function will check what kind of object is being appended,
     then either adds the object as an individual entry or
@@ -68,10 +73,47 @@ def addToJson(filePath, object, toAppend = True, toSort = False):
             list.append(object)
             file.write(json.dumps(list, indent=4))
             file.close()
+
+def addJsonEntry():
+    """
+    This is an easy way to add entries to a JSON file without having to
+    edit the file directly using a text editor.
+    """
+    filePath = ""
+    stringList = []
+    while True:
+        try:
+            filePath = input("File directory: ")
+            open(filePath, "r").close()
+        except:
+            print("That's not a valid file directory.\n")
+            continue
+        print("")
+        break
+
+    count = 0
+
+    while True:
+        try:
+            userInput = input(f"Item({count}): ")
+
+            if userInput == "stop":
+                break
+
+            stringList.append(userInput)
+            count += 1
+        except:
+            import traceback
+            traceback.print_exc(limit=None, file=None, chain=True)
+            while True: pass
+
+    addToList(filePath, stringList, True, True)
+
 if __name__ == "__main__":
+    addJsonEntry()
     #COMBAK: Delete later.
-    import os
-    print(os.getcwd())
-    filePath = r"..\Text Adventure\marvad\presets\LocationNames.json"
-    addToJson(filePath, "Bolognus")
-    print(getJson(filePath))
+    # import os
+    # print(os.getcwd())
+    # filePath = r"..\Text Adventure\marvad\presets\CharacterNames.json"
+    # setJson(filePath, characterNames)
+    # print(getJson(filePath))
