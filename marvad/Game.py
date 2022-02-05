@@ -53,6 +53,17 @@ class Game:
         for scene in self.sceneList:
             if scene.getSceneLevel() == sceneId: return scene
 
+    def setLocationList(self, locationList): self.locationList = locationList
+    def getLocationList(self): return self.locationList
+    def addLocation(self, location): self.locationList.append(location)
+    def getLocation(self, locationName):
+        for location in self.locationList:
+            if location.getName() == locationName:
+                return location
+            else:
+                print(f"[Game.py] No Location named \"{locationname}\" was found in this Game.")
+
+
     def endGame(self): print("Game Over") #TODO: Do something
 
 def createGame(playerName = "Player"):
