@@ -109,6 +109,7 @@ def addJsonEntry():
 
     addToList(filePath, stringList, True, True)
 
+#TODO: Add "return self" to all no-return methods.
 class SmartRandomChoice:
     """
     An object that handles stratified selection from lists.
@@ -121,9 +122,14 @@ class SmartRandomChoice:
         self.isMutuallyInclusive = inclusive
         self.isMutuallyExclusive = exclusive
         self.isWeighingEnabled = enableWeighing
+        self.finalChoiceList = []
+        self.isFinal = False
 
     #Choice OBJECT DICTIONARY LIST: Contains all the objects to choose from.
-    def setChoiceList(self, choices): self.choiceList = choices
+    def setChoiceList(self, choices):
+        self.choiceList = choices
+        self.isFinal = False
+        return self
     def getChoiceList(self): return self.choiceList
     def addChoice(self, object, autoRemove = False, inclusiveWith = [], exclusiveWith = [], weight = 1):
         self.choiceList.append(
@@ -135,13 +141,44 @@ class SmartRandomChoice:
                 "weight" : weight
             }
         )
-
+        self.isFinal = False
+        return self
 
     #Choice Algorithm STRING: This determines how the choices are sorted, which are then chosen from linearly.
-    def setAlgorithm(self, algorithm): self.algorithm = algorithm
-    def getAlgorithm(self): return self.algorithm
-    def
+    """
+    Usable randomizer algorithms:
+    simple_random   - Uses Fisher-Yates randomizer algorithm.
 
+    Usable sorter algorithms:
+    ascending       - Uses Timsort algorithm.
+    descending      - Uses reversed Timsort algorithm.
+
+    IMPORTANT: Using sorter algorithms will cause item weights to be ignored.
+    """
+    def setAlgorithm(self, algorithm):
+        self.algorithm = algorithm
+        self.isFinal = False
+        return self
+    def getAlgorithm(self): return self.algorithm
+    def sortChoiceList(self):
+        import random
+        list = self.choiceList
+
+        #Sorting the choice list.
+        match self.choiceAlgorithm:
+        case "simple_random":
+            #COMBAK: Does this actually not need assigning?
+            random.shuffle(list)
+        case "ascending":
+            #Uses built-in Timsort algorithm.
+            list.sort(reverse=False)
+        case "descending":
+            #Uses built-in Timsort algorithm.
+            list.sort(reverse=True)
+
+        self.choiceList = list
+        self.isFinal = False
+        return self
 
     #Auto-remove BOOLEAN Override ----------------------------------------------
     def isAutoRemoveOverride(self, autoRemove = None):
@@ -150,10 +187,13 @@ class SmartRandomChoice:
 
         Changing this from the default value (False) will cause the chooser to override the values specified in the choiceList. Leaving the value at default (False) will let the chooser use the specified autoRemove values.
         """
-        if (isinstance(autoRemove, None)): print(f"[Utils.SmartRandomChoice] isAutoRemove is {self.isOneTimeSelection}.")
-        else: self.isOneTimeSelection = autoRemove
+        if (isinstance(autoRemove, None)): return self.isOneTimeSelection
+        else:
+            self.isOneTimeSelection = autoRemove
+            return self
 
     #Auto-remove BOOLEAN
+    #TODO: Add setters and getters by index.
     def setAutoRemoveByObjectName(self, objectName, autoRemove):
         """
         Changes an individual choice's autoRemove value based on the choice's object name. This decides whether the chooser should remove the selected choice after selection.
@@ -165,10 +205,10 @@ class SmartRandomChoice:
 
             if isinstance(object, str):
                 if object == objectName: dict["autoRemove"] = autoRemove
-                return
             else:
                 if object.getName() == objectName: dict["autoRemove"] = autoRemove
-                return
+            self.isFinal = False
+            return self
         else:
             print(f"[Utils.SmartRandomChoice] No object with name \"{objectName}\" was found in the choiceList.")
 
@@ -185,11 +225,11 @@ class SmartRandomChoice:
                 if object == objectName: return dict["autoRemove"]
             else:
                 if object.getName() == objectName: return dict["autoRemove"]
-                return
         else:
             print(f"[Utils.SmartRandomChoice] No object with name \"{objectName}\" was found in the choiceList.")
 
     #Mutually Inclusive BOOLEAN Override ---------------------------------------
+    #TODO: Add setters and getters by index.
     def isMutuallyInclusiveOverride(self, inclusive = None):
         """
         Considers mutually inclusive objects. This means that any chosen object will have their mutually included object be guaranteed to be chosen.
@@ -198,10 +238,14 @@ class SmartRandomChoice:
         Leaving this value at default (False) will let the chooser ignore the specified inclusiveWith values.
         Inputting no arguments will simply return the current isMutuallyInclusive value.
         """
-        if (isinstance(inclusive, None)): print(f"[Utils.SmartRandomChoice] isMutuallyInclusive is {self.isMutuallyInclusive}.")
-        else: self.isMutuallyInclusive = inclusive
+        if (isinstance(inclusive, None)): return self.isMutuallyInclusive
+        else:
+            self.isMutuallyInclusive = inclusive
+            self.isFinal = False
+            return self
 
-    #Mutually Exclusive BOOLEAN Override
+    #Mutually Exclusive BOOLEAN Override ---------------------------------------
+    #TODO: Add setters and getters by index.
     def isMutuallyExclusiveOverride(self, exclusive = None):
         """
         Considers mutually exclusive objects. This prevents certain choices from being chosen when the other is already present.
@@ -210,10 +254,13 @@ class SmartRandomChoice:
         Leaving this value at default (False) will let the chooser ignore the specified exclusiveWith values.
         Inputting no arguments will simply return the current isMutuallyExclusive value.
         """
-        if (isinstance(exclusive, None)): print(f"[Utils.SmartRandomChoice] isMutuallyExclusive is {self.isMutuallyExclusive}.")
-        else: self.isMutuallyExclusive = exclusive
+        if (isinstance(exclusive, None)): return self.isMutuallyExclusive
+        else:
+            self.isMutuallyExclusive = exclusive
+            self.isFinal = False
+            return self
 
-
+    #Enable Weights BOOLEAN Override -------------------------------------------
     def isWeighingEnabled(self, enableWeighing = None):
         """
         Considers mutually exclusive objects. This prevents certain choices from being chosen when the other is already present.
@@ -223,13 +270,17 @@ class SmartRandomChoice:
         Inputting no arguments will simply return the current isMutuallyExclusive value.
         """
         if (isinstance(exclusive, None)): print(f"[Utils.SmartRandomChoice] isMutuallyExclusive is {self.isMutuallyExclusive}.")
-        else: self.isMutuallyExclusive = exclusive
-
+        else:
+            self.isMutuallyExclusive = exclusive
+            self.isFinal = False
+            return self
 
     #Weights INTEGER LIST: This determines the likelihood that a choice will be chosen. Higher number = more likely.
     def setWeightByIndex(self, index, weight):
         dict = self.choiceList[index]
         dict["weight"] = weight
+        self.isFinal = False
+        return self
 
     def getWeightByIndex(self, index):
         dict = self.choiceList[index]
@@ -246,10 +297,10 @@ class SmartRandomChoice:
 
             if isinstance(object, str):
                 if object == objectName: dict["weight"] = weight
-                return
             else:
                 if object.getName() == objectName: dict["weight"] = weight
-                return
+            self.isFinal = False
+            return self
         else:
             print(f"[Utils.SmartRandomChoice] No object with name \"{objectName}\" was found in the choiceList.")
 
@@ -264,12 +315,47 @@ class SmartRandomChoice:
 
             if isinstance(object, str):
                 if object == objectName: dict["weight"]
-                return
             else:
                 if object.getName() == objectName: dict["weight"]
-                return
+            return
         else:
             print(f"[Utils.SmartRandomChoice] No object with name \"{objectName}\" was found in the choiceList.")
+
+    #Choice METHOD -------------------------------------------------------------
+    def choose(self):
+        """
+        Returns the first item in the choice list, then modifies the list based on the attributes set on the chooser class.
+
+        This is method is called when the choice list has already been modified to fit the user's needs.
+        """
+        choiceList = self.finalChoiceList
+        choice = choiceList[0]
+
+        #TODO: Make finalChoiceList generator
+
+        #Auto Remove: Removes all copies from the list.
+        if self.isOneTimeSelection:
+            for obj in choiceList:
+                if obj == choice:
+                    choiceList.remove(obj)
+
+        #Mutual Inclusivity
+        if self.isMutuallyInclusive:
+            #TODO: Create attributes "isFinal" & "finalChoiceList".
+            #This way, upon calling choose(), the finalChoiceList will only be generated if isFinal is True. However, making any changes to the chooser's attributes (e.g. isMutuallyInclusiveOverride, adding new items, etc.) will set isFinal to False, forcing the finalChoiceList to be generated again upon using choose().
+            pass
+
+        #Mutual Exclusivity: Removes all mutually exclusive items from the list.
+        if self.isMutuallyExclusive:
+            excludedChoices = choice["exclusive_with"]
+
+            for item in choiceList:
+                if item["object"] in excludedChoices:
+                    choiceList.remove(item)
+
+        return choice
+
+
 
 
 
