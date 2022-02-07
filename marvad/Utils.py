@@ -110,13 +110,14 @@ def addJsonEntry():
     addToList(filePath, stringList, True, True)
 
 #TODO: Add "return self" to all no-return methods.
-class SmartRandomChoice:
+class SmartRandomChoice: #------------------------------------------------------
     """
     An object that handles stratified selection from lists.
     It takes into consideration one-time selection, any mutually inclusive and/or mutually exclusive options, probability weighing, among others.
     """
     def __init__(self, choiceList = [], algorithm = "simple_random", autoRemove = False, inclusive = False, exclusive = False, enableWeighing = False):
         self.choiceList = choiceList #Contains dictionaries.
+        self.choiceCount = 0
         self.choiceAlgorithm = algorithm
         self.isOneTimeSelection = autoRemove
         self.isMutuallyInclusive = inclusive
@@ -143,6 +144,10 @@ class SmartRandomChoice:
         )
         self.isFinal = False
         return self
+
+    #Choice Count INT: This determines the length of the finalChoiceList.
+    def setChoiceCount(self, count): self.choiceCount = count
+    def getName(self): return self.choiceCount
 
     #Choice Algorithm STRING: This determines how the choices are sorted, which are then chosen from linearly.
     """
@@ -329,9 +334,29 @@ class SmartRandomChoice:
         This is method is called when the choice list has already been modified to fit the user's needs.
         """
         choiceList = self.finalChoiceList
+        weightedList = []
+        totalWeight = 0
         choice = choiceList[0]
 
         #TODO: Make finalChoiceList generator
+        if not self.isFinal:
+            choiceList.clear()
+            for item in self.choiceList:
+                itemWeight = item["weight"]
+                weightedList.append(
+                    {
+                        "object" : item,
+                        "weight_floor" : totalWeight + 1,
+                        "weight_ceil" : totalWeight + item["weight"]
+                    }
+                )
+
+            #Trims to fit the choiceCount.
+            #TODO: Figure this out ;-;
+
+            self.finalChoiceList = choiceList
+
+
 
         #Auto Remove: Removes all copies from the list.
         if self.isOneTimeSelection:
@@ -353,6 +378,7 @@ class SmartRandomChoice:
                 if item["object"] in excludedChoices:
                     choiceList.remove(item)
 
+        self.finalChoiceList = choiceList
         return choice
 
 
