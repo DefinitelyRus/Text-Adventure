@@ -11,8 +11,8 @@ class Location:
     """
     def __init__(self, name = "Unnamed Location", targetables = []):
         self.locationName = name
-        self.locationTargetables = targetables
-        self.locationRelations = relations
+        self.locationTargetableList = targetables
+        self.locationRelationList = relations
 
     #Location Name STRING: Just a simple label to name the location.
     def setName(self, name): self.name = name
@@ -24,36 +24,36 @@ class Location:
     def addTargetable(self, targetable): self.targetables.append(targetable)
     def getTargetable(self, name = None):
         from Targetable import Targetable
-        if (self.locationTargetables.size() == 1):
+        if (self.locationTargetableList.size() == 1):
             #Automatically returns the only object in the list if the list is only of size one.
             #COMBAK: Implement this in other lists for other objects.
-            return self.locationTargetables[0]
+            return self.locationTargetableList[0]
         else:
-            for targetable in self.locationTargetables:
+            for targetable in self.locationTargetableList:
                 if targetable.getName() == name: return targetable
             else:
                 print(f"[Location.py] No Targetable named \"{name}\" found in this Location.")
     def removeTargetable(self, name):
-        for targetable in self.locationTargetables:
+        for targetable in self.locationTargetableList:
             if targetable.getName() == name: return targetable
         else:
             print(f"[Location.py] No Targetable named \"{name}\" found in this Location.")
 
     #Relations DICTIONARY (String, String): A dictionary that contains the relationships between this location and the listed locations. (e.g. "AtWar", "Helping", "Tension") If the location isn't listed, it'll be set as neutral by default.
-    def setRelationList(self, relations): self.locationRelations = relations
-    def getRelationList(self): return self.locationRelations
+    def setRelationList(self, relations): self.locationRelationList = relations
+    def getRelationList(self): return self.locationRelationList
     def addRelation(self, location, relation):
-        self.locationRelations[location.getName()] = relation
+        self.locationRelationList[location.getName()] = relation
     def setRelation(self, location, relation):
         #Identical to addRelation(), but added anyway for consistency.
-        self.locationRelations[location.getName()] = relation
-    def getRelation(self, location): return self.locationRelations[location.getName()]
+        self.locationRelationList[location.getName()] = relation
+    def getRelation(self, location): return self.locationRelationList[location.getName()]
     def addRelationByName(self, locationName, relation):
-        self.locationRelations[locationName] = relation
+        self.locationRelationList[locationName] = relation
     def setRelationByName(self, locationName, relation):
         #Identical to addRelation(), but added anyway for consistency.
-        self.locationRelations[locationName] = relation
-    def getRelationByName(self, locationName): return self.locationRelations[locationName]
+        self.locationRelationList[locationName] = relation
+    def getRelationByName(self, locationName): return self.locationRelationList[locationName]
     def autoSetRelations(self, game):
         """
         This method requires the host game object to operate. This way, the method can retrieve all locations automatically by itself.
