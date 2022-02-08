@@ -352,7 +352,15 @@ class SmartRandomChoice: #------------------------------------------------------
                 )
 
             #Trims to fit the choiceCount.
-            #TODO: Figure this out ;-;
+            for item in weightedList:
+                itemWeightFloor = item["weight_floor"]
+                itemWeightCeil = item["weight_ceil"]
+                itemDict = item["object"]
+
+                for exclusion in itemDict["exclusive_with"]:
+                    if exclusion in choiceList:
+                        pass
+                        #TODO: "If an exlusion is already in the choiceList, skip to the next item in the weightedList."
 
             self.finalChoiceList = choiceList
 
